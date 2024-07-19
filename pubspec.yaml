@@ -63,6 +63,7 @@ flutter:
   assets:
     - assets/sprites/forest.png
     - assets/sprites/frame.png
+    - assets/sprites/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

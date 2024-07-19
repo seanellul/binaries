@@ -1,14 +1,29 @@
-final Map<String, dynamic> storyline = {
+final Map<String, dynamic> currentAct = {
   'start': {
-    'description': 'You find yourself at the edge of a dense forest. The trees loom tall and dark.',
+    'type':'',
+    'imagePath': 'assets/sprites/library.png',
+    'description': 'The air in the library is filled with dust, as the faded hardbacks of alchemical books fill the shelves.',
     'options': {
-      'Enter the Forest': {
-        'nextScene': 'forest_path',
+      'Continue': {
+        'nextScene': 'begin',
         'closingFunctions': [],
         'parameters': []
       },
-      'Stay on the Road': {
-        'nextScene': 'roadside_inn',
+    },
+    'openingFunction': [],
+    'parameters': [],
+  },
+    'begin': {
+          'imagePath': 'assets/sprites/forest.png',
+    'description': 'A voice, seemingly reverberating in your head, bouncing across the sinews of your psyche begins to speak...',
+    'options': {
+      'Clear Your Mind to Listen to the Voice': {
+        'nextScene': 'listen',
+        'closingFunctions': [],
+        'parameters': []
+      },
+      'Close Your Mind to the Voice': {
+        'nextScene': 'fight',
         'closingFunctions': [],
         'parameters': []
       },
@@ -16,16 +31,11 @@ final Map<String, dynamic> storyline = {
     'openingFunction': [],
     'parameters': []
   },
-  'forest_path': {
-    'description': 'You step into the forest. The canopy above blocks most of the sunlight.',
+  'listen': {
+    'description': 'This library is yours to use as you please. Just remember, curioisity has a price.',
     'options': {
-      'Follow the Path': {
-        'nextScene': 'forest_clearing',
-        'closingFunctions': [],
-        'parameters': []
-      },
-      'Venture Off the Path': {
-        'nextScene': 'dense_forest',
+      'The voice fades away.': {
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -33,15 +43,15 @@ final Map<String, dynamic> storyline = {
     'openingFunction': [],
     'parameters': []
   },
-  'roadside_inn': {
-    'description': 'You decide to stay at the roadside inn. It is warm and welcoming inside.',
+  'fight': {
+    'description': 'You, try, with all your might, to fight the voice back. What do you think of?',
     'options': {
-      'Talk to the Innkeeper': {
+      'Family': {
         'nextScene': 'innkeeper_story',
         'closingFunctions': [],
         'parameters': []
       },
-      'Sit by the Fire': {
+      'Vengeance': {
         'nextScene': 'fireplace_story',
         'closingFunctions': [],
         'parameters': []
@@ -54,7 +64,7 @@ final Map<String, dynamic> storyline = {
     'description': 'The innkeeper tells you a story about a hidden treasure in the forest.',
     'options': {
       'Ask for Directions': {
-        'nextScene': 'forest_path',
+        'nextScene': 'begin',
         'closingFunctions': [],
         'parameters': []
       },
@@ -88,7 +98,7 @@ final Map<String, dynamic> storyline = {
     'description': 'You decide to stay at the inn for the night. It is a restful sleep.',
     'options': {
       'Start Fresh in the Morning': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -105,7 +115,7 @@ final Map<String, dynamic> storyline = {
     'description': 'You stay another day at the inn, gathering more information about the forest.',
     'options': {
       'Venture into the Forest': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -139,7 +149,7 @@ final Map<String, dynamic> storyline = {
     'description': 'The village market is bustling with activity. You see many interesting items for sale.',
     'options': {
       'Buy Provisions': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -156,7 +166,7 @@ final Map<String, dynamic> storyline = {
     'description': 'The locals tell you stories about the dangers and wonders of the forest.',
     'options': {
       'Head to the Forest': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -178,7 +188,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Leave for the Forest': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -212,7 +222,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Return to the Path': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -246,7 +256,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Return to the Path': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -915,7 +925,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Proceed Cautiously': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -949,7 +959,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Return to Path': {
-        'nextScene': 'forest_path',
+        'nextScene': 'start',
         'closingFunctions': [],
         'parameters': []
       },
@@ -1879,7 +1889,7 @@ final Map<String, dynamic> storyline = {
     'description': 'You find another entrance to the forest. The trees loom tall and dark.',
     'options': {
       'Enter the Forest': {
-        'nextScene': 'forest_path_2',
+        'nextScene': 'start_2',
         'closingFunctions': [],
         'parameters': []
       },
@@ -1892,7 +1902,7 @@ final Map<String, dynamic> storyline = {
     'openingFunction': [],
     'parameters': []
   },
-  'forest_path_2': {
+  'start_2': {
     'description': 'You step into the forest. The canopy above blocks most of the sunlight.',
     'options': {
       'Follow the Path': {
@@ -1918,7 +1928,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Return to the Path': {
-        'nextScene': 'forest_path_2',
+        'nextScene': 'start_2',
         'closingFunctions': [],
         'parameters': []
       },
@@ -2672,7 +2682,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Proceed Cautiously': {
-        'nextScene': 'forest_path_3',
+        'nextScene': 'start_3',
         'closingFunctions': [],
         'parameters': []
       },
@@ -2706,7 +2716,7 @@ final Map<String, dynamic> storyline = {
         'parameters': []
       },
       'Return to Path': {
-        'nextScene': 'forest_path_3',
+        'nextScene': 'start_3',
         'closingFunctions': [],
         'parameters': []
       },

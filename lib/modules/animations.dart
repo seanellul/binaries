@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 class AnimatedScene extends StatelessWidget {
   final Animation<double> animation;
+  final String imagePath;
 
-  AnimatedScene({required this.animation});
+  AnimatedScene({required this.animation, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class AnimatedScene extends StatelessWidget {
                     width: 220 + animation.value, // Slightly smaller than the frame
                     height: 220 + animation.value,
                     child: Image.asset(
-                      'assets/sprites/forest.png',
+                     imagePath,
                       fit: BoxFit.cover,
                     ),
                   ),

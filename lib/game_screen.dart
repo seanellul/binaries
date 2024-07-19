@@ -6,11 +6,15 @@ import 'modules/functions.dart';
 import 'modules/choice_buttons.dart';
 
 class MyGameScreen extends StatefulWidget {
+  const MyGameScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MyGameScreenState createState() => _MyGameScreenState();
 }
 
-class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderStateMixin {
+class _MyGameScreenState extends State<MyGameScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   String currentScene = 'start';
@@ -20,17 +24,18 @@ class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderSt
   String displayedText = '';
   String fullText = '';
   String selectedOption = '';
+  String imagePath = currentAct['start']['imagePath'];
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 3), // Slow animation
+      duration: const Duration(milliseconds: 3000), // Slow animation
       vsync: this,
     )..repeat(reverse: true);
     _animation = Tween<double>(begin: 0.0, end: 10.0).animate(_controller);
     _triggerOpeningFunction(currentScene);
-    fullText = storyline[currentScene]['description'];
+    fullText = currentAct[currentScene]['description'];
     _revealText();
   }
 
@@ -44,26 +49,38 @@ class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderSt
     setState(() {
       selectedOption = option;
       displayedText = option;
-      opacityLevel = 0.0;
+      opacityLevel = 0.05;
     });
 
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 5000));
 
     setState(() {
+      //Adds the description, and chosen option, to the storylineLog to save the user's history.
       storylineLog.add({
-        'description': storyline[currentScene]['description'],
+        'description': currentAct[currentScene]['description'],
         'option': option,
       });
+      
+      // ignore: avoid_print
+      print(storylineLog);
 
+      //Triggers functions at the closing of the last scene.
       _triggerClosingFunctions(currentScene, option);
 
-      currentScene = storyline[currentScene]['options'][option]['nextScene'];
-      fullText = storyline[currentScene]['description'];
-      
+      //Changes currentScene to the descriptor found in the options 'nextScene'. Stories move with these tags.
+      currentScene = currentAct[currentScene]['options'][option]['nextScene'];
+      fullText = currentAct[currentScene]['description'];
+
+      if (currentAct[currentScene]['imagePath'] != null) {
+        imagePath = currentAct[currentScene]['imagePath'];
+      } else {
+        imagePath = 'assets/sprites/rendering_issue.png';
+      }
+
       _triggerOpeningFunction(currentScene);
     });
 
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
 
     setState(() {
       displayedText = '';
@@ -79,27 +96,31 @@ class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderSt
       currentScene = 'start';
       storylineLog.clear();
       _triggerOpeningFunction(currentScene);
-      fullText = storyline[currentScene]['description'];
+      fullText = currentAct[currentScene]['description'];
       displayedText = '';
       _revealText();
     });
   }
 
   void _triggerOpeningFunction(String scene) {
-    if (storyline[scene].containsKey('openingFunction')) {
-      for (int i = 0; i < storyline[scene]['openingFunction'].length; i++) {
-        String functionName = storyline[scene]['openingFunction'][i];
-        dynamic parameter = storyline[scene]['parameters'][i];
+    if (currentAct[scene].containsKey('openingFunction')) {
+      for (int i = 0; i < currentAct[scene]['openingFunction'].length; i++) {
+        String functionName = currentAct[scene]['openingFunction'][i];
+        dynamic parameter = currentAct[scene]['parameters'][i];
         triggerFunction(functionName, parameter: parameter);
       }
     }
   }
 
   void _triggerClosingFunctions(String scene, String option) {
-    if (storyline[scene]['options'][option].containsKey('closingFunctions')) {
-      for (int i = 0; i < storyline[scene]['options'][option]['closingFunctions'].length; i++) {
-        String functionName = storyline[scene]['options'][option]['closingFunctions'][i];
-        dynamic parameter = storyline[scene]['options'][option]['parameters'][i];
+    if (currentAct[scene]['options'][option].containsKey('closingFunctions')) {
+      for (int i = 0;
+          i < currentAct[scene]['options'][option]['closingFunctions'].length;
+          i++) {
+        String functionName =
+            currentAct[scene]['options'][option]['closingFunctions'][i];
+        dynamic parameter =
+            currentAct[scene]['options'][option]['parameters'][i];
         triggerFunction(functionName, parameter: parameter);
       }
     }
@@ -107,9 +128,16 @@ class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderSt
 
   void _revealText() async {
     for (int i = 0; i <= fullText.length; i++) {
-      await Future.delayed(Duration(milliseconds: 15));
+      await Future.delayed(const Duration(milliseconds: 20));
       setState(() {
-        displayedText = fullText.substring(0, i);
+        // Add a conditional check to ensure 'i' is within bounds
+        if (i >= 0 && i <= fullText.length) {
+          displayedText = fullText.substring(0, i);
+        } else {
+          // Handle the case where 'i' is out of bounds (shouldn't happen in this loop)
+          // ignore: avoid_print
+          print("Index out of bounds: $i");
+        }
       });
     }
   }
@@ -117,13 +145,13 @@ class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     var storyLine = [
-      AnimatedScene(animation: _animation),
+      AnimatedScene(animation: _animation, imagePath: imagePath),
       const SizedBox(height: 40),
       AnimatedOpacity(
         opacity: opacityLevel,
         duration: const Duration(seconds: 1),
         child: Container(
-          width: 300,
+          width: 400,
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             color: Colors.black,
@@ -140,25 +168,24 @@ class _MyGameScreenState extends State<MyGameScreen> with SingleTickerProviderSt
       const SizedBox(height: 40),
       AnimatedOpacity(
         opacity: opacityLevel,
-        duration: Duration(seconds: 1),
-        child: storyline[currentScene]['options'].isEmpty
+        duration: const Duration(seconds: 1),
+        child: currentAct[currentScene]['options'].isEmpty
             ? ElevatedButton(
                 onPressed: _restartGame,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.white),
+                ),
                 child: Text(
                   'Restart',
                   style: GoogleFonts.pressStart2p(
                     textStyle: const TextStyle(color: Colors.white),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  side: BorderSide(color: Colors.white),
-                ),
               )
             : ChoiceButtons(
-                options: storyline[currentScene]['options'].keys.toList(),
-                onOptionSelected: _onOptionSelected
-              ),
+                options: currentAct[currentScene]['options'].keys.toList(),
+                onOptionSelected: _onOptionSelected),
       ),
     ];
 
